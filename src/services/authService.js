@@ -1,10 +1,10 @@
 import User from '../models/User.js'
 import mongoose from 'mongoose'
-import { generateToken, asyncHandler } from '../utils/asyncHandler.js'
+import { generateToken } from '../utils/asyncHandler.js'
 import { HTTP_STATUS, USER_ROLES, LOYALTY_TIERS } from '../config/constants.js'
 import { successResponse, createdResponse, errorResponse } from '../utils/apiResponse.js'
 
-export const register = asyncHandler(async (req, res) => {
+export const register = async (req, res) => {
   const { name, email, password, phone } = req.body
 
   const existingUser = await User.findOne({ email })
@@ -22,9 +22,9 @@ export const register = asyncHandler(async (req, res) => {
   })
 
   return createdResponse(res, { id: user._id, name: user.name, email: user.email }, 'User registered successfully')
-})
+}
 
-export const login = asyncHandler(async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email }).select('+password')
@@ -52,7 +52,7 @@ export const login = asyncHandler(async (req, res) => {
   }, 'Login successful')
 })
 
-export const adminLogin = asyncHandler(async (req, res) => {
+export const adminLogin = async (req, res) => {
   const { email, password } = req.body
   const normalizedEmail = email.trim().toLowerCase()
 
@@ -85,7 +85,7 @@ export const adminLogin = asyncHandler(async (req, res) => {
   }, 'Admin login successful')
 })
 
-export const getProfile = asyncHandler(async (req, res) => {
+export const getProfile = async (req, res) => {
   const user = await User.findById(req.user._id).select('-password')
   if (!user) {
     return errorResponse(res, 'User not found', HTTP_STATUS.NOT_FOUND)
@@ -93,7 +93,7 @@ export const getProfile = asyncHandler(async (req, res) => {
   return successResponse(res, user, 'Profile fetched successfully')
 })
 
-export const updateProfile = asyncHandler(async (req, res) => {
+export const updateProfile = async (req, res) => {
   const { name, phone } = req.body
   const user = await User.findById(req.user._id)
 
@@ -105,7 +105,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
   return successResponse(res, { id: user._id, name: user.name, email: user.email, phone: user.phone, role: user.role }, 'Profile updated successfully')
 })
 
-export const changePassword = asyncHandler(async (req, res) => {
+export const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body
   const user = await User.findById(req.user._id).select('+password')
 
@@ -124,7 +124,7 @@ export const changePassword = asyncHandler(async (req, res) => {
   return successResponse(res, null, 'Password changed successfully')
 })
 
-export const addAddress = asyncHandler(async (req, res) => {
+export const addAddress = async (req, res) => {
   const user = await User.findById(req.user._id)
   const address = { ...req.body, _id: new mongoose.Types.ObjectId() }
 
@@ -138,7 +138,7 @@ export const addAddress = asyncHandler(async (req, res) => {
   return successResponse(res, address, 'Address added successfully')
 })
 
-export const updateAddress = asyncHandler(async (req, res) => {
+export const updateAddress = async (req, res) => {
   const { addressId } = req.params
   const user = await User.findById(req.user._id)
 
@@ -158,7 +158,7 @@ export const updateAddress = asyncHandler(async (req, res) => {
   return successResponse(res, user.addresses[addressIndex], 'Address updated successfully')
 })
 
-export const deleteAddress = asyncHandler(async (req, res) => {
+export const deleteAddress = async (req, res) => {
   const { addressId } = req.params
   const user = await User.findById(req.user._id)
 

@@ -3,10 +3,10 @@ import Category from '../models/Category.js'
 import Inventory from '../models/Inventory.js'
 import { HTTP_STATUS, PAGINATION, USER_ROLES } from '../config/constants.js'
 import { successResponse, errorResponse, createdResponse } from '../utils/apiResponse.js'
-import { asyncHandler, generateSKU } from '../utils/helpers.js'
+import { generateSKU } from '../utils/helpers.js'
 import slugify from 'slugify'
 
-export const getAllProducts = asyncHandler(async (req, res) => {
+export const getAllProducts = async (req, res) => {
   const page = parseInt(req.query.page) || PAGINATION.DEFAULT_PAGE
   const limit = parseInt(req.query.limit) || PAGINATION.DEFAULT_LIMIT
   const skip = (page - 1) * limit
@@ -68,7 +68,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
   }, 'Products fetched successfully')
 })
 
-export const getProductById = asyncHandler(async (req, res) => {
+export const getProductById = async (req, res) => {
   const product = await Product.findById(req.params.id).populate('category', 'name slug')
   if (!product || !product.isActive) {
     return errorResponse(res, 'Product not found', HTTP_STATUS.NOT_FOUND)
@@ -85,7 +85,7 @@ export const getProductById = asyncHandler(async (req, res) => {
   return successResponse(res, productObj, 'Product fetched successfully')
 })
 
-export const createProduct = asyncHandler(async (req, res) => {
+export const createProduct = async (req, res) => {
   const productData = req.body
 
   if (productData.images && productData.images.length > 0) {
@@ -110,7 +110,7 @@ export const createProduct = asyncHandler(async (req, res) => {
   return createdResponse(res, product, 'Product created successfully')
 })
 
-export const updateProduct = asyncHandler(async (req, res) => {
+export const updateProduct = async (req, res) => {
   const product = await Product.findById(req.params.id)
   if (!product) {
     return errorResponse(res, 'Product not found', HTTP_STATUS.NOT_FOUND)
@@ -128,7 +128,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
   return successResponse(res, updatedProduct, 'Product updated successfully')
 })
 
-export const deleteProduct = asyncHandler(async (req, res) => {
+export const deleteProduct = async (req, res) => {
   const product = await Product.findById(req.params.id)
   if (!product) {
     return errorResponse(res, 'Product not found', HTTP_STATUS.NOT_FOUND)
@@ -139,7 +139,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   return successResponse(res, null, 'Product deleted successfully')
 })
 
-export const getFeaturedProducts = asyncHandler(async (req, res) => {
+export const getFeaturedProducts = async (req, res) => {
   const products = await Product.find({ isActive: true, badge: { $exists: true, $ne: null } })
     .populate('category', 'name slug')
     .limit(8)

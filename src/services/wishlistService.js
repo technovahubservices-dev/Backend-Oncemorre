@@ -2,14 +2,13 @@ import Wishlist from '../models/Wishlist.js'
 import Product from '../models/Product.js'
 import { HTTP_STATUS } from '../config/constants.js'
 import { successResponse, errorResponse, createdResponse } from '../utils/apiResponse.js'
-import { asyncHandler } from '../utils/asyncHandler.js'
 
-export const getWishlist = asyncHandler(async (req, res) => {
+export const getWishlist = async (req, res) => {
   const wishlist = await Wishlist.findOne({ user: req.user._id }).populate('products', 'name price image sku badge')
   return successResponse(res, wishlist || { products: [] }, 'Wishlist fetched successfully')
 })
 
-export const addToWishlist = asyncHandler(async (req, res) => {
+export const addToWishlist = async (req, res) => {
   const { productId } = req.body
 
   const product = await Product.findById(productId)
@@ -34,7 +33,7 @@ export const addToWishlist = asyncHandler(async (req, res) => {
   return createdResponse(res, wishlist, 'Item added to wishlist successfully')
 })
 
-export const removeFromWishlist = asyncHandler(async (req, res) => {
+export const removeFromWishlist = async (req, res) => {
   const { productId } = req.params
 
   const wishlist = await Wishlist.findOne({ user: req.user._id })
@@ -49,7 +48,7 @@ export const removeFromWishlist = asyncHandler(async (req, res) => {
   return successResponse(res, wishlist, 'Item removed from wishlist successfully')
 })
 
-export const clearWishlist = asyncHandler(async (req, res) => {
+export const clearWishlist = async (req, res) => {
   const wishlist = await Wishlist.findOne({ user: req.user._id })
   if (!wishlist) {
     return errorResponse(res, 'Wishlist not found', HTTP_STATUS.NOT_FOUND)

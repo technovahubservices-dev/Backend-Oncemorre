@@ -3,9 +3,9 @@ import Cart from '../models/Cart.js'
 import Inventory from '../models/Inventory.js'
 import { HTTP_STATUS, ORDER_STATUS, PAYMENT_STATUS } from '../config/constants.js'
 import { successResponse, createdResponse, errorResponse } from '../utils/apiResponse.js'
-import { asyncHandler, calculateOrderTotal } from '../utils/helpers.js'
+import { calculateOrderTotal } from '../utils/helpers.js'
 
-export const createOrder = asyncHandler(async (req, res) => {
+export const createOrder = async (req, res) => {
   const { shippingAddress, paymentMethod = 'card', items: bodyItems } = req.body
 
   let cartItems
@@ -93,7 +93,7 @@ export const createOrder = asyncHandler(async (req, res) => {
   return createdResponse(res, order, 'Order placed successfully')
 })
 
-export const getUserOrders = asyncHandler(async (req, res) => {
+export const getUserOrders = async (req, res) => {
   const page = parseInt(req.query.page) || 1
   const limit = parseInt(req.query.limit) || 10
   const skip = (page - 1) * limit
@@ -111,7 +111,7 @@ export const getUserOrders = asyncHandler(async (req, res) => {
   }, 'Orders fetched successfully')
 })
 
-export const getOrderById = asyncHandler(async (req, res) => {
+export const getOrderById = async (req, res) => {
   const order = await Order.findById(req.params.id).populate('user', 'name email')
   if (!order) {
     return errorResponse(res, 'Order not found', HTTP_STATUS.NOT_FOUND)
@@ -124,7 +124,7 @@ export const getOrderById = asyncHandler(async (req, res) => {
   return successResponse(res, order, 'Order fetched successfully')
 })
 
-export const cancelOrder = asyncHandler(async (req, res) => {
+export const cancelOrder = async (req, res) => {
   const order = await Order.findById(req.params.id)
   if (!order) {
     return errorResponse(res, 'Order not found', HTTP_STATUS.NOT_FOUND)
@@ -140,7 +140,7 @@ export const cancelOrder = asyncHandler(async (req, res) => {
   return successResponse(res, order, 'Order cancelled successfully')
 })
 
-export const getAllOrders = asyncHandler(async (req, res) => {
+export const getAllOrders = async (req, res) => {
   const page = parseInt(req.query.page) || 1
   const limit = parseInt(req.query.limit) || 20
   const skip = (page - 1) * limit
@@ -159,7 +159,7 @@ export const getAllOrders = asyncHandler(async (req, res) => {
   }, 'Orders fetched successfully')
 })
 
-export const updateOrderStatus = asyncHandler(async (req, res) => {
+export const updateOrderStatus = async (req, res) => {
   const { status } = req.body
   const order = await Order.findById(req.params.id)
 

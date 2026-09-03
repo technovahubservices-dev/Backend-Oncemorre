@@ -2,14 +2,13 @@ import Cart from '../models/Cart.js'
 import Product from '../models/Product.js'
 import { HTTP_STATUS } from '../config/constants.js'
 import { successResponse, errorResponse, createdResponse } from '../utils/apiResponse.js'
-import { asyncHandler } from '../utils/asyncHandler.js'
 
-export const getCart = asyncHandler(async (req, res) => {
+export const getCart = async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id }).populate('items.product', 'name price image sku')
   return successResponse(res, cart || { items: [] }, 'Cart fetched successfully')
 })
 
-export const addToCart = asyncHandler(async (req, res) => {
+export const addToCart = async (req, res) => {
   const { productId, quantity = 1, size } = req.body
 
   const product = await Product.findById(productId)
@@ -39,7 +38,7 @@ export const addToCart = asyncHandler(async (req, res) => {
   return createdResponse(res, cart, 'Item added to cart successfully')
 })
 
-export const updateCartItem = asyncHandler(async (req, res) => {
+export const updateCartItem = async (req, res) => {
   const { itemId } = req.params
   const { quantity, size } = req.body
 
@@ -66,7 +65,7 @@ export const updateCartItem = asyncHandler(async (req, res) => {
   return successResponse(res, cart, 'Cart item updated successfully')
 })
 
-export const removeCartItem = asyncHandler(async (req, res) => {
+export const removeCartItem = async (req, res) => {
   const { itemId } = req.params
 
   const cart = await Cart.findOne({ user: req.user._id })
@@ -81,7 +80,7 @@ export const removeCartItem = asyncHandler(async (req, res) => {
   return successResponse(res, cart, 'Item removed from cart successfully')
 })
 
-export const clearCart = asyncHandler(async (req, res) => {
+export const clearCart = async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id })
   if (!cart) {
     return errorResponse(res, 'Cart not found', HTTP_STATUS.NOT_FOUND)

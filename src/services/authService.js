@@ -50,7 +50,7 @@ export const login = async (req, res) => {
       tier: user.tier,
     },
   }, 'Login successful')
-})
+}
 
 export const adminLogin = async (req, res) => {
   const { email, password } = req.body
@@ -83,7 +83,7 @@ export const adminLogin = async (req, res) => {
       tier: user.tier,
     },
   }, 'Admin login successful')
-})
+}
 
 export const getProfile = async (req, res) => {
   const user = await User.findById(req.user._id).select('-password')
@@ -91,7 +91,7 @@ export const getProfile = async (req, res) => {
     return errorResponse(res, 'User not found', HTTP_STATUS.NOT_FOUND)
   }
   return successResponse(res, user, 'Profile fetched successfully')
-})
+}
 
 export const updateProfile = async (req, res) => {
   const { name, phone } = req.body
@@ -103,7 +103,7 @@ export const updateProfile = async (req, res) => {
   await user.save()
 
   return successResponse(res, { id: user._id, name: user.name, email: user.email, phone: user.phone, role: user.role }, 'Profile updated successfully')
-})
+}
 
 export const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body
@@ -122,7 +122,7 @@ export const changePassword = async (req, res) => {
   await user.save()
 
   return successResponse(res, null, 'Password changed successfully')
-})
+}
 
 export const addAddress = async (req, res) => {
   const user = await User.findById(req.user._id)
@@ -136,7 +136,7 @@ export const addAddress = async (req, res) => {
   await user.save()
 
   return successResponse(res, address, 'Address added successfully')
-})
+}
 
 export const updateAddress = async (req, res) => {
   const { addressId } = req.params
@@ -156,7 +156,7 @@ export const updateAddress = async (req, res) => {
   await user.save()
 
   return successResponse(res, user.addresses[addressIndex], 'Address updated successfully')
-})
+}
 
 export const deleteAddress = async (req, res) => {
   const { addressId } = req.params
@@ -171,4 +171,4 @@ export const deleteAddress = async (req, res) => {
   await user.save()
 
   return successResponse(res, null, 'Address deleted successfully')
-})
+}

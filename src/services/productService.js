@@ -66,8 +66,7 @@ export const getAllProducts = async (req, res) => {
       pages: Math.ceil(total / limit),
     },
   }, 'Products fetched successfully')
-})
-
+}
 export const getProductById = async (req, res) => {
   const product = await Product.findById(req.params.id).populate('category', 'name slug')
   if (!product || !product.isActive) {
@@ -83,8 +82,7 @@ export const getProductById = async (req, res) => {
   }
 
   return successResponse(res, productObj, 'Product fetched successfully')
-})
-
+}
 export const createProduct = async (req, res) => {
   const productData = req.body
 
@@ -108,7 +106,7 @@ export const createProduct = async (req, res) => {
   await product.populate('category', 'name slug')
 
   return createdResponse(res, product, 'Product created successfully')
-})
+}
 
 export const updateProduct = async (req, res) => {
   const product = await Product.findById(req.params.id)
@@ -126,7 +124,7 @@ export const updateProduct = async (req, res) => {
   }).populate('category', 'name slug')
 
   return successResponse(res, updatedProduct, 'Product updated successfully')
-})
+}
 
 export const deleteProduct = async (req, res) => {
   const product = await Product.findById(req.params.id)
@@ -137,7 +135,7 @@ export const deleteProduct = async (req, res) => {
   await Product.findByIdAndUpdate(req.params.id, { isActive: false })
 
   return successResponse(res, null, 'Product deleted successfully')
-})
+}
 
 export const getFeaturedProducts = async (req, res) => {
   const products = await Product.find({ isActive: true, badge: { $exists: true, $ne: null } })
@@ -146,4 +144,4 @@ export const getFeaturedProducts = async (req, res) => {
     .sort({ createdAt: -1 })
 
   return successResponse(res, products, 'Featured products fetched successfully')
-})
+}

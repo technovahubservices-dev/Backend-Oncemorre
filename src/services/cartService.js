@@ -6,7 +6,7 @@ import { successResponse, errorResponse, createdResponse } from '../utils/apiRes
 export const getCart = async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id }).populate('items.product', 'name price image sku')
   return successResponse(res, cart || { items: [] }, 'Cart fetched successfully')
-})
+}
 
 export const addToCart = async (req, res) => {
   const { productId, quantity = 1, size } = req.body
@@ -36,7 +36,7 @@ export const addToCart = async (req, res) => {
   await cart.populate('items.product', 'name price image sku')
 
   return createdResponse(res, cart, 'Item added to cart successfully')
-})
+}
 
 export const updateCartItem = async (req, res) => {
   const { itemId } = req.params
@@ -63,7 +63,7 @@ export const updateCartItem = async (req, res) => {
   await cart.populate('items.product', 'name price image sku')
 
   return successResponse(res, cart, 'Cart item updated successfully')
-})
+}
 
 export const removeCartItem = async (req, res) => {
   const { itemId } = req.params
@@ -78,7 +78,7 @@ export const removeCartItem = async (req, res) => {
   await cart.populate('items.product', 'name price image sku')
 
   return successResponse(res, cart, 'Item removed from cart successfully')
-})
+}
 
 export const clearCart = async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id })
@@ -90,4 +90,4 @@ export const clearCart = async (req, res) => {
   await cart.save()
 
   return successResponse(res, cart, 'Cart cleared successfully')
-})
+}
